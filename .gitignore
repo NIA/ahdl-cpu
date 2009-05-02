@@ -1,0 +1,14 @@
+*.sw*
+*.acf
+*.cnf
+*.fit
+*.hex
+*.hif
+*.mmf
+*.ndb
+*.pin
+*.pof
+*.rpt
+*.snf
+*.sof
+*.ttf
