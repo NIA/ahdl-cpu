@@ -1,0 +1,25 @@
+depth = 256;
+width = 8;
+
+address_radix = hex;
+data_radix = hex;
+
+content
+    begin
+     0 :  0;
+     1 :  2;
+     2 :  3;
+     3 :  6;
+     4 :  8;
+     5 :  A;
+     6 :  C;
+     7 :  E;
+     8 : 10;
+     9 : 12;
+     a : 14;
+     b : 16;
+     c : 18;
+     d : 1A;
+     e : 1C;
+     f : 1E;
+    end;

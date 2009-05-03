@@ -1,0 +1,30 @@
+include "lpm_ram_dq.inc";
+subdesign ram
+(
+    addr[7..0],
+    DataIn[7..0],
+    CLK,
+    ModeWrite
+      : input;
+    DataOut[7..0]
+      : output;
+)
+
+variable
+    ram : lpm_ram_dq with
+    (LPM_WIDTH = 8,
+     LPM_WIDTHAD = 8,
+     LPM_FILE = "ram.mif",
+     LPM_ADDRESS_CONTROL = "REGISTERED",
+     LPM_OUTDATA = "REGISTERED",
+     LPM_INDATA = "REGISTERED"
+    );
+
+begin
+    ram.(inclock, outclock) = (clk, clk);
+
+    ram.we = ModeWrite;
+    ram.address[] = addr[];
+    ram.data[] = DataIn[];
+    DataOut[] = ram.q[];
+end;
