@@ -1,0 +1,43 @@
+SUBDESIGN CU
+(
+  CLK
+    : INPUT;
+  
+  ip_ena,       % do increment ip %
+  ip_mode_inc,  % inc or reset %
+  ip_ab_ena     % enable write to address bus %
+    : OUTPUT;
+)
+
+VARIABLE
+  state : MACHINE
+    WITH STATES
+    (
+      LOOP_START,
+      IP_INC,
+      LOOP_END,
+      IDLE
+    );
+
+BEGIN
+  state.clk = CLK;
+  state.(reset, ENA) = (GND, VCC);
+  
+  ip_mode_inc = VCC;  % only incrementing yet %
+
+  ip_ab_ena = VCC;    % we allow access to the ab
+                      to ip first %
+  CASE state IS
+    WHEN LOOP_START =>
+      ip_ena = GND;
+      state = IP_INC;
+    WHEN IP_INC =>
+      ip_ena = VCC;
+      state = LOOP_END;
+    WHEN LOOP_END =>
+      state = LOOP_START;
+    WHEN OTHERS =>
+      state = IDLE;
+  END CASE;
+
+END;
