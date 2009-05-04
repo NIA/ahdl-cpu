@@ -13,9 +13,8 @@ VARIABLE
   state : MACHINE
     WITH STATES
     (
-      LOOP_START,
-      IP_INC,
-      LOOP_END,
+      IP_TO_AB,
+      IP_SET_INC,
       IDLE
     );
 
@@ -27,15 +26,16 @@ BEGIN
 
   ip_ab_ena = VCC;    % we allow access to the ab
                       to ip first %
+
+     % remake %
   CASE state IS
-    WHEN LOOP_START =>
+    WHEN IP_TO_AB =>
       ip_ena = GND;
-      state = IP_INC;
-    WHEN IP_INC =>
+      % ip_ab_ena = VCC; %
+      state = IP_SET_INC;
+    WHEN IP_SET_INC =>
       ip_ena = VCC;
-      state = LOOP_END;
-    WHEN LOOP_END =>
-      state = LOOP_START;
+      state = IP_TO_AB;
     WHEN OTHERS =>
       state = IDLE;
   END CASE;

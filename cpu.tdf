@@ -1,0 +1,33 @@
+INCLUDE "ip.inc";
+INCLUDE "cu.inc";
+
+SUBDESIGN CPU
+(
+  CLK
+    : INPUT;
+  AB[7..0]
+    : OUTPUT;
+)
+
+VARIABLE
+  the_ip  : IP;
+  the_cu  : CU;
+  AddrBus[7..0] : TRI_STATE_NODE;
+  % DataBus : TRI_STATE_NODE; %
+
+BEGIN
+  the_cu.CLK = CLK;
+
+  the_ip.CLK      = CLK;
+  the_ip.AddrIn[] = AddrBus[];
+  the_ip.ENA      = the_cu.ip_ena;
+  the_ip.ModeInc  = the_cu.ip_mode_inc;
+
+  AddrBus[] = TRI( VCC, GND ); % dummy %
+  FOR i IN 0 TO 7 GENERATE
+      AddrBus[i] = TRI( the_ip.AddrOut[i], the_cu.ip_ab_ena );
+  END GENERATE;
+
+  AB[] = AddrBus[];
+
+END;
