@@ -8,11 +8,11 @@ SUBDESIGN CPU
     : INPUT;
   AB[7..0],
   DB[15..0],
-  COP[7..0],  % instruction > code of operation %
-  ADDR[7..0], % instruction > address %
 
   debug_ram_out[15..0],
-  debug_ip_ab_ena
+  debug_ip_ab_ena,
+  debug_cop[7..0],
+  debug_addr[7..0]
     : OUTPUT;
 )
 
@@ -23,10 +23,14 @@ VARIABLE
   AddrBus[7..0]   : TRI_STATE_NODE;
   DataBus[15..0]  : TRI_STATE_NODE;
 
-  IR[15..0] : DFFE;
+  IR[15..0]   : DFFE;
+
+  COP[7..0]   : NODE; % instruction > code of operation %
+  ADDR[7..0]  : NODE; % instruction > address %
 
 BEGIN
   the_cu.CLK = CLK;
+  the_cu.COP[] = COP[];
 
   the_ip.CLK      = CLK;
   the_ip.AddrIn[] = AddrBus[];
@@ -59,4 +63,6 @@ BEGIN
   DB[] = DataBus[];
   COP[7..0] = IR[15..8];
   ADDR[7..0] = IR[7..0];
+  debug_cop[] = COP[];
+  debug_addr[] = ADDR[];
 END;

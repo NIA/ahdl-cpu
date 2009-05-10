@@ -1,6 +1,14 @@
+% instruction codes %
+CONSTANT COP_NOP = H"00";
+CONSTANT COP_HLT = H"01";
+CONSTANT COP_LDA = H"02";
+CONSTANT COP_STA = H"03";
+CONSTANT COP_JMP = H"04";
+
 SUBDESIGN CU
 (
-  CLK
+  CLK,
+  COP[7..0]     % code of operation in IR %
     : INPUT;
   
   ip_ena,       % do increment ip %
@@ -18,14 +26,28 @@ VARIABLE
   state : MACHINE
     WITH STATES
     (
+      % cycle %
       IP_TO_RAM_ADDR,
       RAM_SET_IA,
       RAM_I_TO_IR,
+      PROCESS,
       IP_SET_INC,
+      
+      % different command cases %
+      LDA,
+      STA,
+      JMP,
+
+      % idle %
       IDLE
     );
 
 BEGIN
+  DEFAULTS
+    ip_ena = GND;
+    ir_ena = GND;
+  END DEFAULTS;
+
   state.clk = CLK;
   state.(reset, ENA) = (GND, VCC);
   
@@ -35,26 +57,52 @@ BEGIN
   ram_write = GND;    % only reading yet %
   ram_db_ena = VCC;   % only ram has access to DB yet %
 
-     % remake %
   CASE state IS
+    % cycle %
     WHEN IP_TO_RAM_ADDR =>
-      ip_ena = GND;
-      ir_ena = GND;
       state = RAM_SET_IA;
+
     WHEN RAM_SET_IA =>
-      ip_ena = GND;
-      ir_ena = GND;
       state = RAM_I_TO_IR;
+
     WHEN RAM_I_TO_IR =>
-      ip_ena = GND;
       ir_ena = VCC;
-      state = IP_SET_INC;
+      state = PROCESS;
+
+    WHEN PROCESS =>
+      % next state depends on COP %
+      CASE COP[] IS
+        WHEN COP_NOP =>
+          state = IP_SET_INC;
+        WHEN COP_HLT =>
+          state = IDLE;
+        WHEN COP_LDA =>
+          state = LDA;
+        WHEN COP_STA =>
+          state = STA;
+        WHEN COP_JMP =>
+          state = JMP;
+      END CASE;
+
     WHEN IP_SET_INC =>
       ip_ena = VCC;
-      ir_ena = GND;
       state = IP_TO_RAM_ADDR;
+
+    % different command cases %
+    WHEN LDA =>
+      state = IP_SET_INC;
+
+    WHEN STA =>
+      state = IP_SET_INC;
+
+    WHEN JMP =>
+      state = IP_SET_INC;
+
+    % idle %
     WHEN OTHERS =>
       state = IDLE;
   END CASE;
 
 END;
+
+
