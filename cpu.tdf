@@ -1,19 +1,29 @@
 INCLUDE "ip.inc";
 INCLUDE "cu.inc";
+INCLUDE "ram.inc";
 
 SUBDESIGN CPU
 (
   CLK
     : INPUT;
-  AB[7..0]
+  AB[7..0],
+  DB[15..0],
+  COP[7..0],  % instruction > code of operation %
+  ADDR[7..0], % instruction > address %
+
+  debug_ram_out[15..0],
+  debug_ip_ab_ena
     : OUTPUT;
 )
 
 VARIABLE
   the_ip  : IP;
   the_cu  : CU;
-  AddrBus[7..0] : TRI_STATE_NODE;
-  % DataBus : TRI_STATE_NODE; %
+  the_ram : RAM;
+  AddrBus[7..0]   : TRI_STATE_NODE;
+  DataBus[15..0]  : TRI_STATE_NODE;
+
+  IR[15..0] : DFFE;
 
 BEGIN
   the_cu.CLK = CLK;
@@ -23,11 +33,30 @@ BEGIN
   the_ip.ENA      = the_cu.ip_ena;
   the_ip.ModeInc  = the_cu.ip_mode_inc;
 
-  AddrBus[] = TRI( VCC, GND ); % dummy %
+  IR[].clk = CLK;
+  IR[].ena = the_cu.ir_ena;
+  IR[].d = DataBus[];
+
+  the_ram.clk = CLK;
+  the_ram.addr[] = AddrBus[];
+  the_ram.DataIn[] = DataBus[];
+  the_ram.ModeWrite = the_cu.ram_write;
+  
+  FOR i IN 0 TO 15 GENERATE
+    DataBus[i] = TRI( the_ram.DataOut[i], the_cu.ram_db_ena );
+    DataBus[i] = TRI( VCC, GND); % dummy, just to make sintesizer consider
+                                  the bus to be tri-state node %
+  END GENERATE;
+  debug_ram_out[] = the_ram.DataOut[];
+
   FOR i IN 0 TO 7 GENERATE
       AddrBus[i] = TRI( the_ip.AddrOut[i], the_cu.ip_ab_ena );
+      AddrBus[i] = TRI( VCC, GND ); % dummy %
   END GENERATE;
-
+  debug_ip_ab_ena = the_cu.ip_ab_ena;
+  
   AB[] = AddrBus[];
-
+  DB[] = DataBus[];
+  COP[7..0] = IR[15..8];
+  ADDR[7..0] = IR[7..0];
 END;
