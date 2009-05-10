@@ -2,17 +2,17 @@ include "lpm_ram_dq.inc";
 subdesign ram
 (
     addr[7..0],
-    DataIn[7..0],
+    DataIn[15..0],
     CLK,
     ModeWrite
       : input;
-    DataOut[7..0]
+    DataOut[15..0]
       : output;
 )
 
 variable
     ram : lpm_ram_dq with
-    (LPM_WIDTH = 8,
+    (LPM_WIDTH = 16,
      LPM_WIDTHAD = 8,
      LPM_FILE = "ram.mif",
      LPM_ADDRESS_CONTROL = "REGISTERED",
