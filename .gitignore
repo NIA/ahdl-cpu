@@ -13,3 +13,5 @@
 *.snf
 *.sof
 *.ttf
+.directory
+vimprojects

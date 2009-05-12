@@ -18,7 +18,11 @@ SUBDESIGN CU
   ram_write,    % ram mode %
   ram_db_ena,   % enable write to data bus %
 
-  ir_ena        % latch current instr. into ir %
+  ir_ena,       % latch current instr. into ir %
+  ir_ab_ena,    % enable write to address bus %
+
+  a_ena,        % load from data bus to accum. regiser %
+  a_db_ena      % enable write to data bus %
     : OUTPUT;
 )
 
@@ -35,7 +39,12 @@ VARIABLE
       
       % different command cases %
       LDA,
+        LDA_SET_RAM, % wait until memory loads %
+        LDA_LOAD,
+        
       STA,
+        STA_SET_RAM, % probably unnecessary - memory can work
+                        while next state %
       JMP,
 
       % idle %
@@ -46,16 +55,22 @@ BEGIN
   DEFAULTS
     ip_ena = GND;
     ir_ena = GND;
+    a_ena = GND;
+
+    ip_ab_ena = VCC;  % most time ip has access to AB %
+    ir_ab_ena = GND;  %    -- // -- %
+    
+    ram_db_ena = VCC; % most time ram has access to DB %
+    a_db_ena = GND;   %    -- // -- %
+
+    ram_write = GND;  % most time reading %
   END DEFAULTS;
 
   state.clk = CLK;
   state.(reset, ENA) = (GND, VCC);
   
   ip_mode_inc = VCC;  % only incrementing yet %
-  ip_ab_ena = VCC;    % only ip has access to AB yet %
 
-  ram_write = GND;    % only reading yet %
-  ram_db_ena = VCC;   % only ram has access to DB yet %
 
   CASE state IS
     % cycle %
@@ -90,11 +105,35 @@ BEGIN
 
     % different command cases %
     WHEN LDA =>
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+      state = LDA_SET_RAM;
+    WHEN LDA_SET_RAM =>
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+      state = LDA_LOAD;
+    WHEN LDA_LOAD =>
+      a_ena = VCC;
       state = IP_SET_INC;
 
     WHEN STA =>
-      state = IP_SET_INC;
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
 
+      ram_db_ena = GND;
+      a_db_ena = VCC;
+
+      ram_write = VCC;
+      state = STA_SET_RAM;
+    WHEN STA_SET_RAM =>
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+
+      ram_db_ena = GND;
+      a_db_ena = VCC;
+
+      state = IP_SET_INC;
+      
     WHEN JMP =>
       state = IP_SET_INC;
 
