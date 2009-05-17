@@ -39,13 +39,14 @@ VARIABLE
       
       % different command cases %
       LDA,
-        LDA_SET_RAM, % wait until memory loads %
+        LDA_SET_RAM,  % wait until memory loads %
         LDA_LOAD,
         
       STA,
-        STA_SET_RAM, % probably unnecessary - memory can work
-                        while next state %
+        STA_SET_RAM,  % probably unnecessary - memory can work
+                        while next state, not while this one %
       JMP,
+        JMP_SET_IP,   % seting value from AB into IP %
 
       % idle %
       IDLE
@@ -64,12 +65,12 @@ BEGIN
     a_db_ena = GND;   %    -- // -- %
 
     ram_write = GND;  % most time reading %
+  
+    ip_mode_inc = VCC;  % usually incrementing, not setting from AB %
   END DEFAULTS;
 
   state.clk = CLK;
   state.(reset, ENA) = (GND, VCC);
-  
-  ip_mode_inc = VCC;  % only incrementing yet %
 
 
   CASE state IS
@@ -135,7 +136,15 @@ BEGIN
       state = IP_SET_INC;
       
     WHEN JMP =>
-      state = IP_SET_INC;
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+      state = JMP_SET_IP;
+    WHEN JMP_SET_IP =>
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+      ip_mode_inc = GND;
+      ip_ena = VCC;
+      state = IP_TO_RAM_ADDR;
 
     % idle %
     WHEN OTHERS =>
