@@ -1,9 +1,24 @@
+INCLUDE "const.inc";
 % instruction codes %
 CONSTANT COP_NOP = H"00";
 CONSTANT COP_HLT = H"01";
-CONSTANT COP_LDA = H"02";
-CONSTANT COP_STA = H"03";
-CONSTANT COP_JMP = H"04";
+
+CONSTANT COP_LDA = H"10";
+CONSTANT COP_STA = H"20";
+
+CONSTANT COP_JMP = H"30";
+
+CONSTANT COP_ALU = H"4"; -- code of arithmetic operation command
+                          -- is (COP_ALU , operation code )
+CONSTANT COP_ADD = COP_ALU * H"10" + OP_ADD ;
+CONSTANT COP_SUB = COP_ALU * H"10" + OP_SUB ;
+CONSTANT COP_MUL = COP_ALU * H"10" + OP_MUL ;
+CONSTANT COP_CMP = COP_ALU * H"10" + OP_CMP ;
+                                    
+CONSTANT COP_SLA = H"50";
+CONSTANT COP_SRA = H"51";
+CONSTANT COP_SLAX = H"60";
+CONSTANT COP_SRAX = H"61";
 
 SUBDESIGN CU
 (
@@ -98,6 +113,8 @@ BEGIN
           state = STA;
         WHEN COP_JMP =>
           state = JMP;
+        WHEN (COP_ALU, X) =>
+          state = IP_SET_INC;
       END CASE;
 
     WHEN IP_SET_INC =>

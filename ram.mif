@@ -7,13 +7,15 @@ data_radix = hex;
 content
     begin
      0 : 0000; % NOP %
-     1 : 028D; % LDA 8D %
-     2 : 03FF; % STA FF %
-     3 : 0204; % LDA * %
-     4 : 02FF; % LDA FF %
-     5 : 0401; % JMP 01 %
-     6 : 0100; % HLT %
-     [7..FF] : 0000; % NOP - never executed %
+     1 : 108D; % LDA 8D %
+     2 : 20FF; % STA FF %
+     3 : 1003; % LDA * %
+     4 : 10FF; % LDA FF %
+     5 : 408D; % ADD AD %
+     6 : 3001; % JMP 01 %
+     7 : 0100; % HLT %
+     [8..FF] : 0000; % NOP - never executed %
+     AD: 0101: % some data to add %
      8D: 8D8D; % some data to read %
      FF: FFFF; % some data to read %
     end;
