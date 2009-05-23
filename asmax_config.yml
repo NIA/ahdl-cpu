@@ -1,0 +1,13 @@
+instructions:
+  nop: 0x00
+  lda: 0x10
+  sta: 0x20
+  jmp: 0x30
+  add: 0x40
+  sub: 0x41
+  hlt: 0x01
+memory:
+  size: 256
+  addr size: 2
+  op size: 2
+  address then instruction: false
