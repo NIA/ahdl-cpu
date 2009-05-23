@@ -11,8 +11,8 @@ instructions:
   or:  0x45
   sla: 0x46
   sra: 0x47
-  slax:0x48
-  srax:0x49
+  slax: 0x48
+  srax: 0x49
   hlt: 0x01
 memory:
   size: 256

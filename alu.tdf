@@ -22,17 +22,22 @@ VARIABLE
     LPM_WIDTH = 16,
     LPM_PIPELINE = 1
   );
+
+  LogicResult[15..0] : DFFE;
 BEGIN
   DEFAULTS
     add_sub.clken = GND;
     add_sub.add_sub = VCC;
     Ovfl = GND;
+    LogicResult[].d = GND;
   END DEFAULTS;
 
   add_sub.clock = CLK;
   add_sub.dataa[] = rA[];
   add_sub.datab[] = DataIn[];
-
+  
+  LogicResult[].CLK = CLK;
+  LogicResult[].ENA = ENA;
   
   IF ENA THEN
     CASE OP[] IS
@@ -46,6 +51,12 @@ BEGIN
         add_sub.add_sub = GND;
         DataOut[] = add_sub.result[];
         Ovfl = add_sub.overflow;
+      WHEN OP_AND =>
+        LogicResult[].d = DataIn[] & rA[];
+        DataOut[] = LogicResult[];
+      WHEN OP_OR =>
+        LogicResult[].d = DataIn[] # rA[];
+        DataOut[] = LogicResult[];
     END CASE;
   END IF;
 END;
