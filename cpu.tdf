@@ -1,6 +1,7 @@
 INCLUDE "ip.inc";
 INCLUDE "cu.inc";
 INCLUDE "ram.inc";
+INCLUDE "alu.inc";
 
 SUBDESIGN CPU
 (
@@ -15,6 +16,8 @@ SUBDESIGN CPU
   debug_ir_ab_ena,
   debug_ram_db_ena,
   debug_a_db_ena,
+  debug_alu_db_ena,
+  debug_alu_ena,
   debug_cop[7..0],
   debug_addr[7..0]
     : OUTPUT;
@@ -24,6 +27,7 @@ VARIABLE
   the_ip  : IP;
   the_cu  : CU;
   the_ram : RAM;
+  the_alu : ALU;
   AddrBus[7..0]   : TRI_STATE_NODE;
   DataBus[15..0]  : TRI_STATE_NODE;
 
@@ -57,6 +61,13 @@ BEGIN
   A[].ena = the_cu.a_ena;
   A[].d = DataBus[];
 
+  the_alu.CLK = CLK;
+  the_alu.ENA = the_cu.alu_ena;
+  debug_alu_ena = the_cu.alu_ena;
+  the_alu.OP[3..0] = COP[3..0];
+  the_alu.rA[] = A[];
+  the_alu.DataIn[] = DataBus[];
+
   the_ram.clk = CLK;
   the_ram.addr[] = AddrBus[];
   the_ram.DataIn[] = DataBus[];
@@ -65,10 +76,12 @@ BEGIN
   FOR i IN 0 TO 15 GENERATE
     DataBus[i] = TRI( the_ram.DataOut[i], the_cu.ram_db_ena );
     DataBus[i] = TRI( A[i].q, the_cu.a_db_ena);
+    DataBus[i] = TRI( the_alu.DataOut[i], the_cu.alu_db_ena);
   END GENERATE;
   debug_ram_out[] = the_ram.DataOut[];
   debug_ram_db_ena= the_cu.ram_db_ena;
   debug_a_db_ena = the_cu.a_db_ena;
+  debug_alu_db_ena = the_cu.alu_db_ena;
 
   FOR i IN 0 TO 7 GENERATE
       AddrBus[i] = TRI( the_ip.AddrOut[i], the_cu.ip_ab_ena );

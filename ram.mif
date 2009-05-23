@@ -15,7 +15,7 @@ content
      6 : 3001; % JMP 01 %
      7 : 0100; % HLT %
      [8..FF] : 0000; % NOP - never executed %
-     AD: 0101: % some data to add %
+     AD: 0101; % some data to add %
      8D: 8D8D; % some data to read %
      FF: FFFF; % some data to read %
     end;

@@ -37,7 +37,10 @@ SUBDESIGN CU
   ir_ab_ena,    % enable write to address bus %
 
   a_ena,        % load from data bus to accum. regiser %
-  a_db_ena      % enable write to data bus %
+  a_db_ena,     % enable write to data bus %
+
+  alu_ena,      % do operation in ALU %
+  alu_db_ena    % enable write to data bus %
     : OUTPUT;
 )
 
@@ -63,6 +66,11 @@ VARIABLE
       JMP,
         JMP_SET_IP,   % seting value from AB into IP %
 
+      ALU,  % all operations with ALU %
+        ALU_SET_RAM,
+        ALU_DO,
+        ALU_TO_A,
+
       % idle %
       IDLE
     );
@@ -78,6 +86,7 @@ BEGIN
     
     ram_db_ena = VCC; % most time ram has access to DB %
     a_db_ena = GND;   %    -- // -- %
+    alu_db_ena = GND; %    -- // -- %
 
     ram_write = GND;  % most time reading %
   
@@ -113,8 +122,10 @@ BEGIN
           state = STA;
         WHEN COP_JMP =>
           state = JMP;
-        WHEN (COP_ALU, X) =>
-          state = IP_SET_INC;
+        WHEN COP_ADD %(COP_ALU, X)% =>
+          state = ALU;
+        WHEN OTHERS =>
+          state = IDLE;
       END CASE;
 
     WHEN IP_SET_INC =>
@@ -162,6 +173,29 @@ BEGIN
       ip_mode_inc = GND;
       ip_ena = VCC;
       state = IP_TO_RAM_ADDR;
+
+    WHEN ALU =>
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+      state = ALU_SET_RAM;
+    WHEN ALU_SET_RAM =>
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+      state = ALU_DO;
+    WHEN ALU_DO =>
+      ip_ab_ena = GND; % ? %
+      ir_ab_ena = VCC;
+
+      alu_ena = VCC;
+      state = ALU_TO_A;
+    WHEN ALU_TO_A =>
+      alu_ena = VCC;
+
+      ram_db_ena = GND;
+      alu_db_ena = VCC;
+      
+      a_ena = VCC;
+      state = IP_SET_INC;
 
     % idle %
     WHEN OTHERS =>
