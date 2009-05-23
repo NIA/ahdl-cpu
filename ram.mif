@@ -8,16 +8,16 @@ address_radix = hex;
 data_radix = hex;
 content begin
     00 : 0000; --           NOP   
-    01 : 1009; -- BEGIN     LDA   READ_DATA 
-    02 : 2008; --           STA   FFFF_DATA 
-    03 : 1008; --           LDA   FFFF_DATA 
-    04 : 4007; --           ADD   ADD_DATA 
-    05 : 3001; --           JMP   BEGIN 
-    06 : 0100; --           HLT   
-    07 : 0101; -- ADD_DATA  CON   0x0101
-    08 : ffff; -- FFFF_DATA CON   0xFFFF
-    09 : a0a0; -- READ_DATA CON   0xA0A0
-    0a : 0000; -- 
+    01 : 100a; -- BEGIN     LDA   READ_DATA 
+    02 : 2009; --           STA   FFFF_DATA 
+    03 : 1009; --           LDA   FFFF_DATA 
+    04 : 4008; --           ADD   ADD_DATA 
+    05 : 4108; --           SUB   ADD_DATA 
+    06 : 3001; --           JMP   BEGIN 
+    07 : 0100; --           HLT   
+    08 : 0101; -- ADD_DATA  CON   0x0101
+    09 : ffff; -- FFFF_DATA CON   0xFFFF
+    0a : a0a0; -- READ_DATA CON   0xA0A0
     0b : 0000; -- 
     0c : 0000; -- 
     0d : 0000; -- 

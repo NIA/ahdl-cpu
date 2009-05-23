@@ -3,7 +3,7 @@ BEGIN     LDA   READ_DATA
           STA   FFFF_DATA 
           LDA   FFFF_DATA 
           ADD   ADD_DATA 
-          ;SUB   0xAD 
+          SUB   ADD_DATA 
           JMP   BEGIN 
           HLT   
 ADD_DATA  CON   0x0101;  some data to add 

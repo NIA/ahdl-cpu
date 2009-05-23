@@ -122,7 +122,7 @@ BEGIN
           state = STA;
         WHEN COP_JMP =>
           state = JMP;
-        WHEN COP_ADD %(COP_ALU, X)% =>
+        WHEN (COP_ALU, X,X,X,X) =>
           state = ALU;
         WHEN OTHERS =>
           state = IDLE;
