@@ -6,6 +6,8 @@
             LDA   A
             AND   EXPON_MASK
             SRA   11
+            CMP   NULL  ; check if argument is NULL of INFINITY
+            JE    IF_NULL
             STA   EXPONENT_A
             ;-- parse B ---
             LDA   B
@@ -15,6 +17,8 @@
             LDA   B
             AND   EXPON_MASK
             SRA   11
+            CMP   NULL  ; check if argument is NULL of INFINITY
+            JE    IF_NULL
             STA   EXPONENT_B
             ;-- calculate EXPONENT ---
             LDA   EXPONENT_A
@@ -35,16 +39,22 @@
             SLA   11
             OR    FRACT_RES
             STA   RESULT
+            JMP   FINISH
+            
+            ;----- if NULL ----
+IF_NULL     STA   RESULT
+            JMP   FINISH
             ;------ END ---------
-            HLT
+FINISH      HLT
 
 ; ------- VAR & CONST ----------------
             ORIG  128
     ;- - INPUT DATA & RESULT - - - -
 A           CON   0x4000 ; (1+0)*2^1 = 2
-B           CON   0x4000 ; (1+0)*2^1 = 2
+B           CON   0x0000 ; (1+0)*2^1 = 2
 RESULT      CON   0x0000
     ;- - - CONSTANTS - - - - - - - -
+NULL        CON   0x0000
 FRACT_MASK  CON   0x07FF ; b"0000011111111111"
 EXPON_MASK  CON   0x7800 ; b"0111100000000000"
 
