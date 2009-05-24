@@ -2,6 +2,7 @@ INCLUDE "const.inc";
 include "lpm_add_sub.inc";
 include "lpm_compare.inc";
 include "lpm_clshift.inc";
+include "lpm_mult.inc";
 
 SUBDESIGN ALU
 (
@@ -21,6 +22,9 @@ SUBDESIGN ALU
   Equal,
   Less,
   Greater,
+
+  rX[15..0],
+  x_ena,
 
   debug_greater,
   debug_less
@@ -45,12 +49,21 @@ VARIABLE
     LPM_WIDTHDIST = 4
   );
 
+  mult : lpm_mult WITH
+  (
+    LPM_WIDTHA = 16,
+    LPM_WIDTHB = 16,
+    LPM_WIDTHP = 32,
+    LPM_WIDTHS = 16,
+    LPM_PIPELINE = 1
+  );
+
   EqualTrig   : DFFE;
   LessTrig    : DFFE;
   GreaterTrig : DFFE;
 
   LogicResult[15..0] : DFFE;
-  CompareInput[15..0]: DFFE;
+  InputLatch[15..0]: DFFE;
 
 BEGIN
   DEFAULTS
@@ -61,22 +74,28 @@ BEGIN
     LogicResult[].d = GND;
 
     (EqualTrig, LessTrig, GreaterTrig).ENA = GND;
+
+    x_ena = GND;
   END DEFAULTS;
 
   add_sub.clock = CLK;
   add_sub.dataa[] = rA[];
   add_sub.datab[] = DataIn[];
 
-  CompareInput[].CLK = CLK;
-  CompareInput[].ENA = ENA;
-  CompareInput[].d = DataIn[];
+  InputLatch[].CLK = CLK;
+  InputLatch[].ENA = ENA;
+  InputLatch[].d = DataIn[];
   
   compare.dataa[] = rA[];
-  compare.datab[] = CompareInput[];
+  compare.datab[] = DataIn[];--InputLatch[];
 
   small_shift.data[] = rA[];
   small_shift.distance[] = ParameterIn[3..0];
   
+  mult.clock = CLK;
+  mult.dataa[] = rA[];
+  mult.datab[] = DataIn[];--InputLatch[];
+
   LogicResult[].CLK = CLK;
   LogicResult[].ENA = ENA;
 
@@ -110,13 +129,16 @@ BEGIN
         DataOut[] = LogicResult[];
       WHEN OP_CMP =>
         (EqualTrig, LessTrig, GreaterTrig).ENA = VCC;
-        DataOut[] = CompareInput[];
+        DataOut[] = InputLatch[];
       WHEN OP_SLA =>
         small_shift.direction = GND;
         DataOut[] = small_shift.result[];
       WHEN OP_SRA =>
         small_shift.direction = VCC;
         DataOut[] = small_shift.result[];
+      WHEN OP_MUL =>
+        x_ena = VCC;
+        (DataOut[], rX[]) = mult.result[];
     END CASE;
   END IF;
 END;

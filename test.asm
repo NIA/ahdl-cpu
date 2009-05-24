@@ -16,6 +16,9 @@ COMPARE   ADD   ONE
           LDA   FFFF2
           SLA   4
           SRA   4
+
+          MUL   n100
+
           JMP   EXIT
           NOP
           NOP
@@ -31,3 +34,4 @@ STRIPS    CON   0x0F0F  ; some data to do bitwise or with
 ONE       CON   1
 THREE     CON   3
 FFFF2     CON   0xFFFF
+n100      CON   0x100

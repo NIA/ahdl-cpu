@@ -11,6 +11,7 @@ SUBDESIGN CPU
   AB[7..0],
   DB[15..0],
   rA[15..0],
+  rX[15..0],
   Greater,
   Less,
   Equal,
@@ -46,6 +47,7 @@ VARIABLE
   
     % other registers %
   A[15..0]    : DFFE;    
+  XX[15..0]   : DFFE; % register X, cause X is a keyword %
 
 
 BEGIN
@@ -70,6 +72,9 @@ BEGIN
   A[].ena = the_cu.a_ena;
   A[].d = DataBus[];
 
+  XX[].clk = CLK;
+  XX[].ena = the_alu.x_ena;--VCC;
+
   the_alu.CLK = CLK;
   the_alu.ENA = the_cu.alu_ena;
   debug_alu_ena = the_cu.alu_ena;
@@ -77,6 +82,7 @@ BEGIN
   the_alu.rA[] = A[];
   the_alu.DataIn[] = DataBus[];
   the_alu.ParameterIn[] = AddrBus[];
+  XX[].d = the_alu.rX[];
 
   the_ram.clk = CLK;
   the_ram.addr[] = AddrBus[];
@@ -103,6 +109,7 @@ BEGIN
   AB[] = AddrBus[];
   DB[] = DataBus[];
   rA[] = A[].q;
+  rX[] = XX[];
   Greater = the_alu.Greater;
   Less = the_alu.Less;
   Equal = the_alu.Equal;

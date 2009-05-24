@@ -20,7 +20,7 @@
 
 -- MAX+plus II Include File
 -- Version 9.6 3/22/2000
--- Created: Sun May 24 15:34:51 2009
+-- Created: Sun May 24 17:09:44 2009
 
 FUNCTION alu (clk, ena, op[3..0], datain[15..0], parameterin[7..0], ra[15..0])
-    RETURNS (dataout[15..0], ovfl, equal, less, greater, debug_greater, debug_less);
+    RETURNS (dataout[15..0], ovfl, equal, less, greater, rx[15..0], x_ena, debug_greater, debug_less);
