@@ -13,7 +13,8 @@ SUBDESIGN ALU
   ParameterIn[7..0],
 
   % registers %
-  rA[15..0]
+  rA[15..0],
+  rX[15..0]
     : INPUT;
   
   DataOut[15..0],
@@ -23,7 +24,7 @@ SUBDESIGN ALU
   Less,
   Greater,
 
-  rX[15..0],
+  rX_out[15..0],
   x_ena,
 
   debug_greater,
@@ -70,6 +71,7 @@ VARIABLE
 
   LogicResult[15..0] : DFFE;
   InputLatch[15..0]: DFFE;
+  XLatch[15..0] : DFFE;
 
 BEGIN
   DEFAULTS
@@ -91,6 +93,10 @@ BEGIN
   InputLatch[].CLK = CLK;
   InputLatch[].ENA = ENA;
   InputLatch[].d = DataIn[];
+
+  XLatch[].CLK = CLK;
+  XLatch[].ENA = ENA;
+  XLatch[].d = rX[];
   
   compare.dataa[] = rA[];
   compare.datab[] = DataIn[];--InputLatch[];
@@ -98,7 +104,7 @@ BEGIN
   small_shift.data[] = rA[];
   small_shift.distance[] = ParameterIn[3..0];
 
-  big_shift.data[] = (rA[], rX[]);
+  big_shift.data[] = (rA[], XLatch[]);
   big_shift.distance[] = ParameterIn[4..0];
   
   mult.clock = CLK;
@@ -146,16 +152,16 @@ BEGIN
         small_shift.direction = VCC;
         DataOut[] = small_shift.result[];
       WHEN OP_SLAX =>
-        small_shift.direction = GND;
+        big_shift.direction = GND;
         x_ena = VCC;
-        (DataOut[], rX[]) = big_shift.result[];
+        (DataOut[], rX_out[]) = big_shift.result[];
       WHEN OP_SRAX =>
-        small_shift.direction = VCC;
+        big_shift.direction = VCC;
         x_ena = VCC;
-        (DataOut[], rX[]) = big_shift.result[];
+        (DataOut[], rX_out[]) = big_shift.result[];
       WHEN OP_MUL =>
         x_ena = VCC;
-        (DataOut[], rX[]) = mult.result[];
+        (DataOut[], rX_out[]) = mult.result[];
     END CASE;
   END IF;
 END;

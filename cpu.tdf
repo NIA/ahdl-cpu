@@ -81,8 +81,9 @@ BEGIN
   the_alu.OP[3..0] = COP[3..0];
   the_alu.rA[] = A[];
   the_alu.DataIn[] = DataBus[];
+  the_alu.rX[] = XX[];
   the_alu.ParameterIn[] = AddrBus[];
-  XX[].d = the_alu.rX[];
+  XX[].d = the_alu.rX_out[];
 
   the_ram.clk = CLK;
   the_ram.addr[] = AddrBus[];

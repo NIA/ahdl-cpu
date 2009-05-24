@@ -18,7 +18,8 @@ COMPARE   ADD   ONE
           SRA   4
 
           MUL   n100
-          SLAX  8
+          SLAX  12
+          SRAX  8
 
           JMP   EXIT
           NOP
