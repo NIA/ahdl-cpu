@@ -13,6 +13,11 @@ TEST3       LDA   TEST3_A
             LDA   TEST3_B
             STA   B
             JMP   START
+TEST4       LDA   TEST4_A
+            STA   A
+            LDA   TEST4_B
+            STA   B
+            JMP   START
 
 START       LDA   TEST_NUM
             ADD   ONE
@@ -49,12 +54,24 @@ START       LDA   TEST_NUM
             LDA   FRACTION_A
             MUL   FRACTION_B
             SLAX  5
-            AND   FRACT_MASK    ; delete unnecessary "1"
-            STA   FRACT_RES
             ; TODO:
             ;-- correct EXPONENT if needed
+            CMP   FRACT_OVFL
+            JL    MAKE_RES
+            ; - else - shift right 1 and inc. exponent
+            SRAX  1
+            STA   FRACT_RES
 
+            LDA   EXPON_RES
+            ADD   ONE
+            STA   EXPON_RES
+
+            LDA   FRACT_RES
+            JMP   MAKE_RES
+            
             ;--
+MAKE_RES    AND   FRACT_MASK    ; delete unnecessary "1"
+            STA   FRACT_RES
             LDA   EXPON_RES
             SLA   11
             OR    FRACT_RES
@@ -70,6 +87,8 @@ FINISH      LDA   TEST_NUM
             JL    TEST2
             CMP   THREE
             JL    TEST3
+            CMP   FOUR
+            JL    TEST4
 
             HLT
 
@@ -85,12 +104,14 @@ ONE         CON   1
 TWO         CON   2
 THREE       CON   3
 FOUR        CON   4
-FRACT_MASK  CON   0x07FF ; b"0000011111111111"
-EXPON_MASK  CON   0x7800 ; b"0111100000000000"
+FRACT_MASK  CON   0x07FF  ; b"0000011111111111"
+EXPON_MASK  CON   0x7800  ; b"0111100000000000"
 
-FIRST_ONE   CON   0x0800 ; b"0000100000000000"
+FIRST_ONE   CON   0x0800  ; b"0000100000000000"
 
 EXPON_XCS   CON   7 ; exponent excess to present negative exponent as positive
+FRACT_OVFL  CON   0x1000  ; if fraction after multiplication isn't less than this,
+                          ; we need to increment the exponent
     ;- - - VARIABLES - - - - - - - -
             ORIG  200
 FRACTION_A  CON   0x0000
@@ -110,3 +131,6 @@ TEST2_A     CON   0x4000
 TEST2_B     CON   0x0000 ; 0
 TEST3_A     CON   0x3A00 ; 1.25
 TEST3_B     CON   0x3900 ; 1.125
+TEST4_A     CON   0x3C00 ; 1.5
+TEST4_B     CON   0x3E00 ; 1.75
+

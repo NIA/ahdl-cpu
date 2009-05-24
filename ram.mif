@@ -11,78 +11,78 @@ content begin
     01 : 2080; --             STA   A
     02 : 10df; --             LDA   TEST1_B
     03 : 2081; --             STA   B
-    04 : 300f; --             JMP   START
+    04 : 3014; --             JMP   START
     05 : 10e0; -- TEST2       LDA   TEST2_A
     06 : 2080; --             STA   A
     07 : 10e1; --             LDA   TEST2_B
     08 : 2081; --             STA   B
-    09 : 300f; --             JMP   START
+    09 : 3014; --             JMP   START
     0a : 10e2; -- TEST3       LDA   TEST3_A
     0b : 2080; --             STA   A
     0c : 10e3; --             LDA   TEST3_B
     0d : 2081; --             STA   B
-    0e : 300f; --             JMP   START
-    0f : 10cc; -- START       LDA   TEST_NUM
-    10 : 4084; --             ADD   ONE
-    11 : 20cc; --             STA   TEST_NUM
-    12 : 1080; --             LDA   A
-    13 : 4488; --             AND   FRACT_MASK
-    14 : 458a; --             OR    FIRST_ONE
-    15 : 20c8; --             STA   FRACTION_A
-    16 : 1080; --             LDA   A
-    17 : 4489; --             AND   EXPON_MASK
-    18 : 470b; --             SRA   11
-    19 : 4383; --             CMP   NULL  
-    1a : 3134; --             JE    IF_NULL
-    1b : 20ca; --             STA   EXPONENT_A
-    1c : 1081; --             LDA   B
-    1d : 4488; --             AND   FRACT_MASK
-    1e : 458a; --             OR    FIRST_ONE
-    1f : 20c9; --             STA   FRACTION_B
-    20 : 1081; --             LDA   B
-    21 : 4489; --             AND   EXPON_MASK
-    22 : 470b; --             SRA   11
-    23 : 4383; --             CMP   NULL  
-    24 : 3134; --             JE    IF_NULL
-    25 : 20cb; --             STA   EXPONENT_B
-    26 : 10ca; --             LDA   EXPONENT_A
-    27 : 40cb; --             ADD   EXPONENT_B
-    28 : 418b; --             SUB   EXPON_XCS
-    29 : 20dd; --             STA   EXPON_RES
-    2a : 10c8; --             LDA   FRACTION_A
-    2b : 42c9; --             MUL   FRACTION_B
-    2c : 4805; --             SLAX  5
-    2d : 4488; --             AND   FRACT_MASK    
-    2e : 20dc; --             STA   FRACT_RES
-    2f : 10dd; --             LDA   EXPON_RES
-    30 : 460b; --             SLA   11
-    31 : 45dc; --             OR    FRACT_RES
-    32 : 2082; --             STA   RESULT
-    33 : 3036; --             JMP   FINISH
-    34 : 2082; -- IF_NULL     STA   RESULT
-    35 : 3036; --             JMP   FINISH
-    36 : 10cc; -- FINISH      LDA   TEST_NUM
-    37 : 4385; --             CMP   TWO
-    38 : 3305; --             JL    TEST2
-    39 : 4386; --             CMP   THREE
-    3a : 330a; --             JL    TEST3
-    3b : 0100; --             HLT
-    3c : 0000; -- 
-    3d : 0000; -- 
-    3e : 0000; -- 
-    3f : 0000; -- 
-    40 : 0000; -- 
-    41 : 0000; -- 
-    42 : 0000; -- 
-    43 : 0000; -- 
-    44 : 0000; -- 
-    45 : 0000; -- 
-    46 : 0000; -- 
-    47 : 0000; -- 
-    48 : 0000; -- 
-    49 : 0000; -- 
-    4a : 0000; -- 
-    4b : 0000; -- 
+    0e : 3014; --             JMP   START
+    0f : 10e4; -- TEST4       LDA   TEST4_A
+    10 : 2080; --             STA   A
+    11 : 10e5; --             LDA   TEST4_B
+    12 : 2081; --             STA   B
+    13 : 3014; --             JMP   START
+    14 : 10cc; -- START       LDA   TEST_NUM
+    15 : 4084; --             ADD   ONE
+    16 : 20cc; --             STA   TEST_NUM
+    17 : 1080; --             LDA   A
+    18 : 4488; --             AND   FRACT_MASK
+    19 : 458a; --             OR    FIRST_ONE
+    1a : 20c8; --             STA   FRACTION_A
+    1b : 1080; --             LDA   A
+    1c : 4489; --             AND   EXPON_MASK
+    1d : 470b; --             SRA   11
+    1e : 4383; --             CMP   NULL  
+    1f : 3142; --             JE    IF_NULL
+    20 : 20ca; --             STA   EXPONENT_A
+    21 : 1081; --             LDA   B
+    22 : 4488; --             AND   FRACT_MASK
+    23 : 458a; --             OR    FIRST_ONE
+    24 : 20c9; --             STA   FRACTION_B
+    25 : 1081; --             LDA   B
+    26 : 4489; --             AND   EXPON_MASK
+    27 : 470b; --             SRA   11
+    28 : 4383; --             CMP   NULL  
+    29 : 3142; --             JE    IF_NULL
+    2a : 20cb; --             STA   EXPONENT_B
+    2b : 10ca; --             LDA   EXPONENT_A
+    2c : 40cb; --             ADD   EXPONENT_B
+    2d : 418b; --             SUB   EXPON_XCS
+    2e : 20dd; --             STA   EXPON_RES
+    2f : 10c8; --             LDA   FRACTION_A
+    30 : 42c9; --             MUL   FRACTION_B
+    31 : 4805; --             SLAX  5
+    32 : 438c; --             CMP   FRACT_OVFL
+    33 : 333b; --             JL    MAKE_RES
+    34 : 4901; --             SRAX  1
+    35 : 20dc; --             STA   FRACT_RES
+    36 : 10dd; --             LDA   EXPON_RES
+    37 : 4084; --             ADD   ONE
+    38 : 20dd; --             STA   EXPON_RES
+    39 : 10dc; --             LDA   FRACT_RES
+    3a : 303b; --             JMP   MAKE_RES
+    3b : 4488; -- MAKE_RES    AND   FRACT_MASK    
+    3c : 20dc; --             STA   FRACT_RES
+    3d : 10dd; --             LDA   EXPON_RES
+    3e : 460b; --             SLA   11
+    3f : 45dc; --             OR    FRACT_RES
+    40 : 2082; --             STA   RESULT
+    41 : 3044; --             JMP   FINISH
+    42 : 2082; -- IF_NULL     STA   RESULT
+    43 : 3044; --             JMP   FINISH
+    44 : 10cc; -- FINISH      LDA   TEST_NUM
+    45 : 4385; --             CMP   TWO
+    46 : 3305; --             JL    TEST2
+    47 : 4386; --             CMP   THREE
+    48 : 330a; --             JL    TEST3
+    49 : 4387; --             CMP   FOUR
+    4a : 330f; --             JL    TEST4
+    4b : 0100; --             HLT
     4c : 0000; -- 
     4d : 0000; -- 
     4e : 0000; -- 
@@ -143,11 +143,11 @@ content begin
     85 : 0002; -- TWO         CON   2
     86 : 0003; -- THREE       CON   3
     87 : 0004; -- FOUR        CON   4
-    88 : 07ff; -- FRACT_MASK  CON   0x07FF 
-    89 : 7800; -- EXPON_MASK  CON   0x7800 
-    8a : 0800; -- FIRST_ONE   CON   0x0800 
+    88 : 07ff; -- FRACT_MASK  CON   0x07FF  
+    89 : 7800; -- EXPON_MASK  CON   0x7800  
+    8a : 0800; -- FIRST_ONE   CON   0x0800  
     8b : 0007; -- EXPON_XCS   CON   7 
-    8c : 0000; -- 
+    8c : 1000; -- FRACT_OVFL  CON   0x1000  
     8d : 0000; -- 
     8e : 0000; -- 
     8f : 0000; -- 
@@ -235,8 +235,8 @@ content begin
     e1 : 0000; -- TEST2_B     CON   0x0000 
     e2 : 3a00; -- TEST3_A     CON   0x3A00 
     e3 : 3900; -- TEST3_B     CON   0x3900 
-    e4 : 0000; -- 
-    e5 : 0000; -- 
+    e4 : 3c00; -- TEST4_A     CON   0x3C00 
+    e5 : 3e00; -- TEST4_B     CON   0x3E00 
     e6 : 0000; -- 
     e7 : 0000; -- 
     e8 : 0000; -- 
