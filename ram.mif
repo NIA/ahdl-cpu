@@ -7,38 +7,38 @@ width = 16;
 address_radix = hex;
 data_radix = hex;
 content begin
-    00 : 0000; --           NOP
-    01 : 1019; -- BEGIN     LDA   READ_DATA
-    02 : 2018; --           STA   FFFF_DATA
-    03 : 1018; --           LDA   FFFF_DATA
-    04 : 4017; --           ADD   ADD_DATA
-    05 : 4117; --           SUB   ADD_DATA
-    06 : 441a; --           AND   HALF
-    07 : 451b; --           OR    STRIPS
-    08 : 101c; --           LDA   ONE
-    09 : 431d; --           CMP   THREE
-    0a : 401c; -- COMPARE   ADD   ONE
-    0b : 431d; --           CMP   THREE
-    0c : 330a; --           JL    COMPARE
-    0d : 101e; --           LDA   FFFF2
-    0e : 4604; --           SLA   4
-    0f : 4704; --           SRA   4
-    10 : 421f; --           MUL   n100
-    11 : 4808; --           SLAX  8
-    12 : 3016; --           JMP   EXIT
-    13 : 0000; --           NOP
-    14 : 0000; --           NOP
-    15 : 0000; --           NOP
-    16 : 0100; -- EXIT      HLT   
-    17 : 0101; -- ADD_DATA  CON   0x0101  
-    18 : ffff; -- FFFF_DATA CON   0xFFFF  
-    19 : a0a0; -- READ_DATA CON   0xA0A0  
-    1a : 00ff; -- HALF      CON   0x00FF  
-    1b : 0f0f; -- STRIPS    CON   0x0F0F  
-    1c : 0001; -- ONE       CON   1
-    1d : 0003; -- THREE     CON   3
-    1e : ffff; -- FFFF2     CON   0xFFFF
-    1f : 0100; -- n100      CON   0x100
+    00 : 1080; --             LDA   A
+    01 : 4483; --             AND   FRACT_MASK
+    02 : 20c8; --             STA   FRACTION_A
+    03 : 1080; --             LDA   A
+    04 : 4484; --             AND   EXPON_MASK
+    05 : 470b; --             SRA   11
+    06 : 20ca; --             STA   EXPONENT_A
+    07 : 0100; --             HLT
+    08 : 0000; -- 
+    09 : 0000; -- 
+    0a : 0000; -- 
+    0b : 0000; -- 
+    0c : 0000; -- 
+    0d : 0000; -- 
+    0e : 0000; -- 
+    0f : 0000; -- 
+    10 : 0000; -- 
+    11 : 0000; -- 
+    12 : 0000; -- 
+    13 : 0000; -- 
+    14 : 0000; -- 
+    15 : 0000; -- 
+    16 : 0000; -- 
+    17 : 0000; -- 
+    18 : 0000; -- 
+    19 : 0000; -- 
+    1a : 0000; -- 
+    1b : 0000; -- 
+    1c : 0000; -- 
+    1d : 0000; -- 
+    1e : 0000; -- 
+    1f : 0000; -- 
     20 : 0000; -- 
     21 : 0000; -- 
     22 : 0000; -- 
@@ -135,11 +135,11 @@ content begin
     7d : 0000; -- 
     7e : 0000; -- 
     7f : 0000; -- 
-    80 : 0000; -- 
-    81 : 0000; -- 
-    82 : 0000; -- 
-    83 : 0000; -- 
-    84 : 0000; -- 
+    80 : 3801; -- A           CON   0x3801 
+    81 : 3801; -- B           CON   0x3801 
+    82 : 0000; -- RESULT      CON   0x0000
+    83 : 07ff; -- FRACT_MASK  CON   0x07FF 
+    84 : 7800; -- EXPON_MASK  CON   0x7800 
     85 : 0000; -- 
     86 : 0000; -- 
     87 : 0000; -- 
@@ -207,10 +207,10 @@ content begin
     c5 : 0000; -- 
     c6 : 0000; -- 
     c7 : 0000; -- 
-    c8 : 0000; -- 
-    c9 : 0000; -- 
-    ca : 0000; -- 
-    cb : 0000; -- 
+    c8 : 0000; -- FRACTION_A  CON   0x0000
+    c9 : 0000; -- FRACTION_B  CON   0x0000
+    ca : 0000; -- EXPONENT_A  CON   0X0000
+    cb : 0000; -- EXPONENT_B  CON   0x0000
     cc : 0000; -- 
     cd : 0000; -- 
     ce : 0000; -- 
