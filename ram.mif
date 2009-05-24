@@ -8,37 +8,37 @@ address_radix = hex;
 data_radix = hex;
 content begin
     00 : 0000; --           NOP
-    01 : 1018; -- BEGIN     LDA   READ_DATA
-    02 : 2017; --           STA   FFFF_DATA
-    03 : 1017; --           LDA   FFFF_DATA
-    04 : 4016; --           ADD   ADD_DATA
-    05 : 4116; --           SUB   ADD_DATA
-    06 : 4419; --           AND   HALF
-    07 : 451a; --           OR    STRIPS
-    08 : 101b; --           LDA   ONE
-    09 : 431c; --           CMP   THREE
-    0a : 401b; -- COMPARE   ADD   ONE
-    0b : 431c; --           CMP   THREE
+    01 : 1019; -- BEGIN     LDA   READ_DATA
+    02 : 2018; --           STA   FFFF_DATA
+    03 : 1018; --           LDA   FFFF_DATA
+    04 : 4017; --           ADD   ADD_DATA
+    05 : 4117; --           SUB   ADD_DATA
+    06 : 441a; --           AND   HALF
+    07 : 451b; --           OR    STRIPS
+    08 : 101c; --           LDA   ONE
+    09 : 431d; --           CMP   THREE
+    0a : 401c; -- COMPARE   ADD   ONE
+    0b : 431d; --           CMP   THREE
     0c : 330a; --           JL    COMPARE
-    0d : 101d; --           LDA   FFFF2
+    0d : 101e; --           LDA   FFFF2
     0e : 4604; --           SLA   4
     0f : 4704; --           SRA   4
-    10 : 421e; --           MUL   n100
-    11 : 3015; --           JMP   EXIT
-    12 : 0000; --           NOP
+    10 : 421f; --           MUL   n100
+    11 : 4808; --           SLAX  8
+    12 : 3016; --           JMP   EXIT
     13 : 0000; --           NOP
     14 : 0000; --           NOP
-    15 : 0100; -- EXIT      HLT   
-    16 : 0101; -- ADD_DATA  CON   0x0101  
-    17 : ffff; -- FFFF_DATA CON   0xFFFF  
-    18 : a0a0; -- READ_DATA CON   0xA0A0  
-    19 : 00ff; -- HALF      CON   0x00FF  
-    1a : 0f0f; -- STRIPS    CON   0x0F0F  
-    1b : 0001; -- ONE       CON   1
-    1c : 0003; -- THREE     CON   3
-    1d : ffff; -- FFFF2     CON   0xFFFF
-    1e : 0100; -- n100      CON   0x100
-    1f : 0000; -- 
+    15 : 0000; --           NOP
+    16 : 0100; -- EXIT      HLT   
+    17 : 0101; -- ADD_DATA  CON   0x0101  
+    18 : ffff; -- FFFF_DATA CON   0xFFFF  
+    19 : a0a0; -- READ_DATA CON   0xA0A0  
+    1a : 00ff; -- HALF      CON   0x00FF  
+    1b : 0f0f; -- STRIPS    CON   0x0F0F  
+    1c : 0001; -- ONE       CON   1
+    1d : 0003; -- THREE     CON   3
+    1e : ffff; -- FFFF2     CON   0xFFFF
+    1f : 0100; -- n100      CON   0x100
     20 : 0000; -- 
     21 : 0000; -- 
     22 : 0000; -- 
