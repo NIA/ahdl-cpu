@@ -1,5 +1,6 @@
 INCLUDE "const.inc";
 include "lpm_add_sub.inc";
+include "lpm_compare.inc";
 
 SUBDESIGN ALU
 (
@@ -13,7 +14,14 @@ SUBDESIGN ALU
     : INPUT;
   
   DataOut[15..0],
-  Ovfl
+  Ovfl,
+
+  Equal,
+  Less,
+  Greater,
+
+  debug_greater,
+  debug_less
     : OUTPUT;
 )
 VARIABLE
@@ -23,22 +31,54 @@ VARIABLE
     LPM_PIPELINE = 1
   );
 
+  compare : lpm_compare WITH
+  (
+    LPM_WIDTH = 16,
+    LPM_PIPELINE = 0
+  );
+  
+  EqualTrig   : DFFE;
+  LessTrig    : DFFE;
+  GreaterTrig : DFFE;
+
   LogicResult[15..0] : DFFE;
+  CompareInput[15..0]: DFFE;
+
 BEGIN
   DEFAULTS
     add_sub.clken = GND;
     add_sub.add_sub = VCC;
     Ovfl = GND;
+
     LogicResult[].d = GND;
+
+    (EqualTrig, LessTrig, GreaterTrig).ENA = GND;
   END DEFAULTS;
 
   add_sub.clock = CLK;
   add_sub.dataa[] = rA[];
   add_sub.datab[] = DataIn[];
+
+  CompareInput[].CLK = CLK;
+  CompareInput[].ENA = ENA;
+  CompareInput[].d = DataIn[];
+  
+  compare.dataa[] = rA[];
+  compare.datab[] = CompareInput[];
   
   LogicResult[].CLK = CLK;
   LogicResult[].ENA = ENA;
-  
+
+  (EqualTrig, LessTrig, GreaterTrig).CLK = CLK;
+  EqualTrig.d = compare.aeb;
+  LessTrig.d = compare.alb;
+  GreaterTrig.d = compare.agb;
+  debug_greater = compare.agb;
+  debug_less = compare.alb;
+  Equal = EqualTrig.q;
+  Less = LessTrig.q;
+  Greater = GreaterTrig.q;
+
   IF ENA THEN
     CASE OP[] IS
       WHEN OP_ADD =>
@@ -57,6 +97,9 @@ BEGIN
       WHEN OP_OR =>
         LogicResult[].d = DataIn[] # rA[];
         DataOut[] = LogicResult[];
+      WHEN OP_CMP =>
+        (EqualTrig, LessTrig, GreaterTrig).ENA = VCC;
+        DataOut[] = CompareInput[];
     END CASE;
   END IF;
 END;

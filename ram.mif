@@ -8,31 +8,31 @@ address_radix = hex;
 data_radix = hex;
 content begin
     00 : 0000; --           NOP
-    01 : 100f; -- BEGIN     LDA   READ_DATA
-    02 : 200e; --           STA   FFFF_DATA
-    03 : 100e; --           LDA   FFFF_DATA
-    04 : 400d; --           ADD   ADD_DATA
-    05 : 410d; --           SUB   ADD_DATA
-    06 : 4410; --           AND   HALF
-    07 : 4511; --           OR    STRIPS
-    08 : 300c; --           JMP   EXIT
-    09 : 0000; --           NOP
-    0a : 0000; --           NOP
-    0b : 0000; --           NOP
-    0c : 0100; -- EXIT      HLT   
-    0d : 0101; -- ADD_DATA  CON   0x0101  
-    0e : ffff; -- FFFF_DATA CON   0xFFFF  
-    0f : a0a0; -- READ_DATA CON   0xA0A0  
-    10 : 00ff; -- HALF      CON   0x00FF  
-    11 : 0f0f; -- STRIPS    CON   0x0F0F  
-    12 : 0000; -- 
-    13 : 0000; -- 
-    14 : 0000; -- 
-    15 : 0000; -- 
-    16 : 0000; -- 
-    17 : 0000; -- 
-    18 : 0000; -- 
-    19 : 0000; -- 
+    01 : 1015; -- BEGIN     LDA   READ_DATA
+    02 : 2014; --           STA   FFFF_DATA
+    03 : 1014; --           LDA   FFFF_DATA
+    04 : 4013; --           ADD   ADD_DATA
+    05 : 4113; --           SUB   ADD_DATA
+    06 : 4416; --           AND   HALF
+    07 : 4517; --           OR    STRIPS
+    08 : 1018; --           LDA   ONE
+    09 : 4319; --           CMP   TWO
+    0a : 4018; --           ADD   ONE
+    0b : 4319; --           CMP   TWO
+    0c : 4018; --           ADD   ONE
+    0d : 4319; --           CMP   TWO
+    0e : 3012; --           JMP   EXIT
+    0f : 0000; --           NOP
+    10 : 0000; --           NOP
+    11 : 0000; --           NOP
+    12 : 0100; -- EXIT      HLT   
+    13 : 0101; -- ADD_DATA  CON   0x0101  
+    14 : ffff; -- FFFF_DATA CON   0xFFFF  
+    15 : a0a0; -- READ_DATA CON   0xA0A0  
+    16 : 00ff; -- HALF      CON   0x00FF  
+    17 : 0f0f; -- STRIPS    CON   0x0F0F  
+    18 : 0001; -- ONE       CON   1
+    19 : 0002; -- TWO       CON   2
     1a : 0000; -- 
     1b : 0000; -- 
     1c : 0000; -- 

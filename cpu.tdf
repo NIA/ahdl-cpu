@@ -7,9 +7,13 @@ SUBDESIGN CPU
 (
   CLK
     : INPUT;
+  
   AB[7..0],
   DB[15..0],
   rA[15..0],
+  Greater,
+  Less,
+  Equal,
 
   debug_ram_out[15..0],
   debug_ip_ab_ena,
@@ -19,7 +23,9 @@ SUBDESIGN CPU
   debug_alu_db_ena,
   debug_alu_ena,
   debug_cop[7..0],
-  debug_addr[7..0]
+  debug_addr[7..0],
+  debug_greater,
+  debug_less
     : OUTPUT;
 )
 
@@ -93,6 +99,11 @@ BEGIN
   AB[] = AddrBus[];
   DB[] = DataBus[];
   rA[] = A[].q;
+  Greater = the_alu.Greater;
+  Less = the_alu.Less;
+  Equal = the_alu.Equal;
   debug_cop[] = COP[];
   debug_addr[] = ADDR[];
+  debug_greater = the_alu.debug_greater;
+  debug_less = the_alu.debug_less;
 END;
