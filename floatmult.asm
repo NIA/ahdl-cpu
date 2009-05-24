@@ -1,4 +1,4 @@
-            ;-- parse A --
+            ;-- parse A ---
             LDA   A
             AND   FRACT_MASK
             OR    FIRST_ONE
@@ -7,7 +7,7 @@
             AND   EXPON_MASK
             SRA   11
             STA   EXPONENT_A
-            ;-- parse B
+            ;-- parse B ---
             LDA   B
             AND   FRACT_MASK
             OR    FIRST_ONE
@@ -21,8 +21,20 @@
             ADD   EXPONENT_B
             SUB   EXPON_XCS
             STA   EXPON_RES
-            
-            
+            ;-- calculate FRACTION ---
+            LDA   FRACTION_A
+            MUL   FRACTION_B
+            SLAX  5
+            AND   FRACT_MASK    ; delete unnecessary "1"
+            STA   FRACT_RES
+            ; TODO:
+            ;-- correct EXPONENT if needed
+
+            ;--
+            LDA   EXPON_RES
+            SLA   11
+            OR    FRACT_RES
+            STA   RESULT
             ;------ END ---------
             HLT
 
