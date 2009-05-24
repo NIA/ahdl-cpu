@@ -9,25 +9,25 @@ data_radix = hex;
 content begin
     00 : 1080; --             LDA   A
     01 : 4483; --             AND   FRACT_MASK
-    02 : 20c8; --             STA   FRACTION_A
-    03 : 1080; --             LDA   A
-    04 : 4484; --             AND   EXPON_MASK
-    05 : 470b; --             SRA   11
-    06 : 20ca; --             STA   EXPONENT_A
-    07 : 0100; --             HLT
-    08 : 0000; -- 
-    09 : 0000; -- 
-    0a : 0000; -- 
-    0b : 0000; -- 
-    0c : 0000; -- 
-    0d : 0000; -- 
-    0e : 0000; -- 
-    0f : 0000; -- 
-    10 : 0000; -- 
-    11 : 0000; -- 
-    12 : 0000; -- 
-    13 : 0000; -- 
-    14 : 0000; -- 
+    02 : 4585; --             OR    FIRST_ONE
+    03 : 20c8; --             STA   FRACTION_A
+    04 : 1080; --             LDA   A
+    05 : 4484; --             AND   EXPON_MASK
+    06 : 470b; --             SRA   11
+    07 : 20ca; --             STA   EXPONENT_A
+    08 : 1081; --             LDA   B
+    09 : 4483; --             AND   FRACT_MASK
+    0a : 4585; --             OR    FIRST_ONE
+    0b : 20c9; --             STA   FRACTION_B
+    0c : 1081; --             LDA   B
+    0d : 4484; --             AND   EXPON_MASK
+    0e : 470b; --             SRA   11
+    0f : 20cb; --             STA   EXPONENT_B
+    10 : 10ca; --             LDA   EXPONENT_A
+    11 : 40cb; --             ADD   EXPONENT_B
+    12 : 4186; --             SUB   EXPON_XCS
+    13 : 20dd; --             STA   EXPON_RES
+    14 : 0100; --             HLT
     15 : 0000; -- 
     16 : 0000; -- 
     17 : 0000; -- 
@@ -135,13 +135,13 @@ content begin
     7d : 0000; -- 
     7e : 0000; -- 
     7f : 0000; -- 
-    80 : 3801; -- A           CON   0x3801 
-    81 : 3801; -- B           CON   0x3801 
+    80 : 4000; -- A           CON   0x4000 
+    81 : 4000; -- B           CON   0x4000 
     82 : 0000; -- RESULT      CON   0x0000
     83 : 07ff; -- FRACT_MASK  CON   0x07FF 
     84 : 7800; -- EXPON_MASK  CON   0x7800 
-    85 : 0000; -- 
-    86 : 0000; -- 
+    85 : 0800; -- FIRST_ONE   CON   0x0800 
+    86 : 0007; -- EXPON_XCS   CON   7 
     87 : 0000; -- 
     88 : 0000; -- 
     89 : 0000; -- 
@@ -227,8 +227,8 @@ content begin
     d9 : 0000; -- 
     da : 0000; -- 
     db : 0000; -- 
-    dc : 0000; -- 
-    dd : 0000; -- 
+    dc : 0000; -- FRACT_RES   CON   0x0000
+    dd : 0000; -- EXPON_RES   CON   0x0000
     de : 0000; -- 
     df : 0000; -- 
     e0 : 0000; -- 
