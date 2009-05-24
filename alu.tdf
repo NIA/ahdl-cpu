@@ -1,6 +1,7 @@
 INCLUDE "const.inc";
 include "lpm_add_sub.inc";
 include "lpm_compare.inc";
+include "lpm_clshift.inc";
 
 SUBDESIGN ALU
 (
@@ -8,6 +9,7 @@ SUBDESIGN ALU
   ENA,
   OP  [3..0],   % code of arithmetic operation %
   DataIn[15..0],
+  ParameterIn[7..0],
 
   % registers %
   rA[15..0]
@@ -36,7 +38,13 @@ VARIABLE
     LPM_WIDTH = 16,
     LPM_PIPELINE = 0
   );
-  
+
+  small_shift : lpm_clshift WITH
+  (
+    LPM_WIDTH = 16,
+    LPM_WIDTHDIST = 4
+  );
+
   EqualTrig   : DFFE;
   LessTrig    : DFFE;
   GreaterTrig : DFFE;
@@ -65,6 +73,9 @@ BEGIN
   
   compare.dataa[] = rA[];
   compare.datab[] = CompareInput[];
+
+  small_shift.data[] = rA[];
+  small_shift.distance[] = ParameterIn[3..0];
   
   LogicResult[].CLK = CLK;
   LogicResult[].ENA = ENA;
@@ -100,6 +111,12 @@ BEGIN
       WHEN OP_CMP =>
         (EqualTrig, LessTrig, GreaterTrig).ENA = VCC;
         DataOut[] = CompareInput[];
+      WHEN OP_SLA =>
+        small_shift.direction = GND;
+        DataOut[] = small_shift.result[];
+      WHEN OP_SRA =>
+        small_shift.direction = VCC;
+        DataOut[] = small_shift.result[];
     END CASE;
   END IF;
 END;

@@ -7,6 +7,9 @@ CONSTANT COP_LDA = H"10";
 CONSTANT COP_STA = H"20";
 
 CONSTANT COP_JMP = H"30";
+CONSTANT COP_JE  = H"31";
+CONSTANT COP_JG  = H"32";
+CONSTANT COP_JL  = H"33";
 
 CONSTANT COP_ALU = H"4"; -- code of arithmetic operation command
                           -- is (COP_ALU , operation code )
@@ -23,7 +26,10 @@ CONSTANT COP_SRAX= COP_ALU * H"10" + OP_SRAX;
 SUBDESIGN CU
 (
   CLK,
-  COP[7..0]     % code of operation in IR %
+  COP[7..0],     % code of operation in IR %
+  Greater,
+  Equal,
+  Less
     : INPUT;
   
   ip_ena,       % do increment ip %
@@ -65,6 +71,9 @@ VARIABLE
                         while next state, not while this one %
       JMP,
         JMP_SET_IP,   % seting value from AB into IP %
+      JE,
+      JG,
+      JL,
 
       ALU,  % all operations with ALU %
         ALU_SET_RAM,
@@ -125,6 +134,12 @@ BEGIN
           state = STA;
         WHEN COP_JMP =>
           state = JMP;
+        WHEN COP_JE =>
+          state = JE;
+        WHEN COP_JG =>
+          state = JG;
+        WHEN COP_JL =>
+          state = JL;
         WHEN (COP_ALU, X,X,X,X) =>
           state = ALU;
         WHEN OTHERS =>
@@ -170,6 +185,30 @@ BEGIN
       ip_ab_ena = GND;
       ir_ab_ena = VCC;
       state = JMP_SET_IP;
+    WHEN JE =>
+      IF Equal THEN
+        ip_ab_ena = GND;
+        ir_ab_ena = VCC;
+        state = JMP_SET_IP;
+      ELSE
+        state = IP_SET_INC;
+      END IF;
+    WHEN JG =>
+      IF Greater THEN
+        ip_ab_ena = GND;
+        ir_ab_ena = VCC;
+        state = JMP_SET_IP;
+      ELSE
+        state = IP_SET_INC;
+      END IF;
+    WHEN JL =>
+      IF Less THEN
+        ip_ab_ena = GND;
+        ir_ab_ena = VCC;
+        state = JMP_SET_IP;
+      ELSE
+        state = IP_SET_INC;
+      END IF;
     WHEN JMP_SET_IP =>
       ip_ab_ena = GND;
       ir_ab_ena = VCC;
@@ -196,6 +235,9 @@ BEGIN
         state = ALU_TO_A; % need to put result to rA %
       END IF;
     WHEN ALU_TO_A =>
+      ip_ab_ena = GND;
+      ir_ab_ena = VCC;
+
       alu_ena = VCC;
 
       ram_db_ena = GND;

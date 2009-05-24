@@ -20,7 +20,7 @@
 
 -- MAX+plus II Include File
 -- Version 9.6 3/22/2000
--- Created: Fri May 22 17:13:19 2009
+-- Created: Sun May 24 14:46:07 2009
 
-FUNCTION cu (clk, cop[7..0])
+FUNCTION cu (clk, cop[7..0], greater, equal, less)
     RETURNS (ip_ena, ip_mode_inc, ip_ab_ena, ram_write, ram_db_ena, ir_ena, ir_ab_ena, a_ena, a_db_ena, alu_ena, alu_db_ena);

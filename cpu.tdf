@@ -51,6 +51,9 @@ VARIABLE
 BEGIN
   the_cu.CLK = CLK;
   the_cu.COP[] = COP[];
+  the_cu.Greater = the_alu.Greater;
+  the_cu.Equal = the_alu.Equal;
+  the_cu.Less = the_alu.Less;
 
   the_ip.CLK      = CLK;
   the_ip.AddrIn[] = AddrBus[];
@@ -73,6 +76,7 @@ BEGIN
   the_alu.OP[3..0] = COP[3..0];
   the_alu.rA[] = A[];
   the_alu.DataIn[] = DataBus[];
+  the_alu.ParameterIn[] = AddrBus[];
 
   the_ram.clk = CLK;
   the_ram.addr[] = AddrBus[];

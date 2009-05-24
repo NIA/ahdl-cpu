@@ -8,11 +8,14 @@ BEGIN     LDA   READ_DATA
           OR    STRIPS
 
           LDA   ONE
-          CMP   TWO
-          ADD   ONE
-          CMP   TWO
-          ADD   ONE
-          CMP   TWO
+          CMP   THREE
+COMPARE   ADD   ONE
+          CMP   THREE
+          JL    COMPARE
+
+          LDA   FFFF2
+          SLA   4
+          SRA   4
           JMP   EXIT
           NOP
           NOP
@@ -26,4 +29,5 @@ HALF      CON   0x00FF  ; some data to do bitwise add with
 STRIPS    CON   0x0F0F  ; some data to do bitwise or with
 
 ONE       CON   1
-TWO       CON   2
+THREE     CON   3
+FFFF2     CON   0xFFFF
